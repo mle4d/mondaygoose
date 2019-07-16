@@ -20,9 +20,9 @@ describe('memey stuff tests', () => {
     return mongoose.connection.close();
   });
   
-  it('post', ('/api/v1/memer'), () => {
+  it('post', () => {
     return request(app)
-      .post('')
+      .post('/api/v1/memer')
       .send({ 
         top: 'Cant take the thrown',
         image: 'url string',
@@ -30,25 +30,29 @@ describe('memey stuff tests', () => {
       })
       .then(res => {
         expect(res.body).toEqual({ 
+          _id: expect.any(String),
           top: 'Cant take the thrown',
           image: 'url string',
-          bottom: 'if there is no thrown'
+          bottom: 'if there is no thrown',
+          __v: 0
         });
       });
   });
 
-  //   it('getcha', () => {
-  //     return request(app)
-  //       .get('/')
-  //       .then(res => {
-  //         expect(res.body).toEqual([{ 
-  //          top:
-  //          image:
-  //          bottom:
-  //         }]);
-  //       });
-  //   });
-  // });
+  it('getcha', async() => {
+    const meme = await Meme.create({ 
+      top: 'Cant take the thrown',
+      image: 'url string',
+      bottom: 'if there is no thrown'
+    });
+    return request(app)
+      .get('/api/v1/memer')
+      .then(res => {
+        const memeJSON = JSON.parse(JSON.stringify(meme));
+        expect(res.body).toEqual([memeJSON]);
+      });
+  });
+});
   
 // it('new memer', () => {
 //   return request(app)
@@ -74,4 +78,4 @@ describe('memey stuff tests', () => {
 //         bottom:
 //       });
 //     });
-});
+
