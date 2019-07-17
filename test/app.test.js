@@ -52,30 +52,48 @@ describe('memey stuff tests', () => {
         expect(res.body).toEqual([memeJSON]);
       });
   });
+  it('puts a meme', async() => {
+    const meme = await Meme.create({ 
+      top: 'honest to fuck',
+      image: 'url string',
+      bottom: 'you are a jackass'
+    });
+    return request(app)
+      .put(`/api/v1/memer/${meme._id}`)
+      .send({ 
+        top: 'honest to fuck',
+        image: 'url string',
+        bottom: 'you are a jackass'
+      })
+      .then(res => {
+        expect(res.body).toEqual({  
+          _id: expect.any(String),
+          top: 'honest to fuck',
+          image: 'url string',
+          bottom: 'you are a jackass',
+          __v: 0
+        });
+      });
+
+  });
+
+  it('delete the meme', async() => {
+    const meme = await Meme.create({ 
+      top: 'Cant take the thrown',
+      image: 'url string',
+      bottom: 'if there is no thrown'
+    });
+    return request(app)
+      .delete(`/api/v1/memer/${meme._id}`)
+      .then(res => {
+        expect(res.body).toEqual({
+          _id: expect.any(String),
+          top: 'Cant take the thrown',
+          image: 'url string',
+          bottom: 'if there is no thrown',
+          __v: 0
+        });
+      });
+  });
 });
-  
-// it('new memer', () => {
-//   return request(app)
-//     .put('/')
-//     .send({ 
-//       character: 'Fry'
-//     })
-//     .then(res => {
-//       expect(res.body).toEqual({ 
-//         top:
-//         image:
-//         bottom:
-//       });
-//     });
-// });
-// it('deletesa', () => {
-//   return request(app)
-//     .delete('/')
-//     .then(res => {
-//       expect(res.body).toEqual({
-//         top:
-//         image:
-//         bottom:
-//       });
-//     });
 
